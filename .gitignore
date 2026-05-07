@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+*.egg
+.pytest_cache/
+.mypy_cache/
+
+# Local env / secrets
+configs/env_config.yaml
+*.id_ed25519
+*_ed25519
+*.pem
+.env
+
+# Data and model artefacts (regenerate locally)
+output/
+*.pt
+*.pth
+*.npy
+*.npz
+*.log
+
+# IDE
+.idea/
+.vscode/
+.obsidian/
+
+# OS
+.DS_Store
+Thumbs.db
+~$*

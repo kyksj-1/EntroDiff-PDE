@@ -1,0 +1,17 @@
+# Buckley–Leverett experiment configuration.
+experiment:
+  name: "e2_bl_run"
+  epochs: 200                   # full training
+  learning_rate: 2.0e-4
+
+  nu: 1.0                       # VE-SDE unit viscosity
+  tau_max: 1.0
+
+  lambda_bv: 0.1                # BV total-variation regularizer
+  lambda_dsm: 1.0
+  lambda_time: 1.0              # Godunov time-consistency (helps for the non-convex flux)
+
+  heun_steps: 50
+  zeta_pde: 0.0                 # PDE guidance off (unconditional sampling)
+
+  data_file: "bl_1d_N5000_Nx128.npy"  # Buckley-Leverett dataset

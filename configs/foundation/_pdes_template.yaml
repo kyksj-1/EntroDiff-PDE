@@ -1,0 +1,33 @@
+# ============================================================================
+# Foundation Model: PDE list template.
+# Usage: copy the `data:` block below into `configs/foundation/{tiny,small,base}.yaml`.
+# Add a new PDE by appending {name, data_file, flux_type, weight}; no code changes are needed.
+# The `flux_type` string is dispatched in the loss code to the corresponding Godunov flux.
+# ============================================================================
+data:
+  conditioning_type: "ic"          # "ic" → first frame as conditioning; "none" → unconditional
+  mix_strategy: "uniform"          # "uniform" | "weighted_by_size"
+
+  pdes:
+    # ---- 1D inviscid Burgers ----
+    - name: "burgers"
+      data_file: "burgers_1d_N5000_Nx128.npy"
+      flux_type: "burgers"
+      weight: 1.0
+
+    # ---- 1D Buckley-Leverett (non-convex flux) ----
+    - name: "buckley_leverett"
+      data_file: "bl_1d_N5000_Nx128.npy"
+      flux_type: "buckley_leverett"
+      weight: 1.0
+
+    # ---- Future extensions (uncomment + provide data files to enable) ----
+    # - name: "euler_sod"
+    #   data_file: "euler_sod_1d_N5000_Nx128.npy"
+    #   flux_type: "euler"
+    #   weight: 0.5
+    #
+    # - name: "shallow_water"
+    #   data_file: "sw_1d_N5000_Nx128.npy"
+    #   flux_type: "shallow_water"
+    #   weight: 0.5

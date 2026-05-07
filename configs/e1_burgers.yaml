@@ -1,0 +1,31 @@
+# =============================================================================
+# config/e1_burgers.yaml · 1D inviscid Burgers experiment configuration
+# =============================================================================
+# Inherits `default.yaml` and overrides only the relevant fields.
+
+experiment:
+  name: "E1_burgers"
+  seed: 0
+
+data:
+  pde: "burgers"
+  N_x: 256
+  T: 0.5
+  n_samples: 4096
+
+model:
+  type: "bvaware"            # main run uses the BV-aware variant; switch to "baseline" for ablations
+  in_channels: 1
+
+schedule:
+  type: "viscosity_matched"
+  nu_phys: 0.0               # inviscid setting: shocks form naturally
+  T_d: 1.0
+
+loss:
+  lambda_ent: 0.1
+  lambda_bv: 0.05
+  lambda_burg: 0.01
+
+train:
+  total_steps: 200000

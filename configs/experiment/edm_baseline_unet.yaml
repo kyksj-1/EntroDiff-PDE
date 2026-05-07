@@ -1,0 +1,8 @@
+# EDM baseline reference (UNet, log-normal sigma, L_DSM only).
+# 200 epochs on Burgers-only data, 5 seeds.
+experiment:
+  name: "edm_baseline_unet"
+  epochs: 200
+  learning_rate: 2.0e-4
+  lambda_dsm: 1.0
+  data_file: "burgers_1d_N5000_Nx128.npy"

@@ -1,0 +1,26 @@
+# =============================================================================
+# E2 Buckley–Leverett · pure-EDM baseline training configuration.
+# Difference vs the matched experiment config:
+#   - model_type: "standard"  (no tanh structural prior)
+#   - lambda_bv: 0  (pure L_DSM training, no BV regularization)
+# All other hyperparameters are matched to keep the comparison fair.
+# =============================================================================
+experiment:
+  name: "e2_baseline_run"
+  epochs: 200                        # matched
+  learning_rate: 2.0e-4
+
+  nu: 1.0
+  tau_max: 1.0
+
+  lambda_bv: 0.0                     # disable BV loss → pure L_DSM
+  lambda_dsm: 1.0
+
+  heun_steps: 50
+  zeta_pde: 0.0
+
+  data_file: "bl_1d_N5000_Nx128.npy"
+  model_type: "standard"             # standard score parameterization (no structural prior)
+  use_ic: true
+  in_channels: 2
+  dim: 64                            # baseline dim (matches the standard-score convention)

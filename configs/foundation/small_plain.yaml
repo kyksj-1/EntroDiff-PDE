@@ -1,0 +1,57 @@
+# =============================================================================
+# Foundation Model · SMALL_PLAIN configuration (DiT plain-score baseline).
+# Differences vs `small.yaml` (the BV-aware variant):
+#   - model.type:  "dit_bvaware" → "dit_plain"  (no structural prior)
+#   - lambda_bv:   0.1 → 0.0  (no BV regularizer for the plain baseline)
+#   - lambda_time: 0.5 → 0.0  (no time-consistency loss for the plain baseline)
+#
+# Design rationale: a fair comparison requires the plain baseline to be trained
+# under its own natural objective (L_DSM only). The architectural prior carries
+# the gain, not the auxiliary loss terms.
+#
+# Approximate parameter count: ~7.0M (the BV-aware variant is ~7.4M, with a
+# small conv head adding the structural correction).
+# =============================================================================
+
+experiment:
+  name: "foundation_small_plain"
+  epochs: 200                 # matched
+  learning_rate: 2.0e-4
+  batch_size: 64
+  grad_accum_steps: 1
+  use_amp: false              # matched (the plain variant has no 2nd-order autograd, but stay consistent)
+
+  nu: 1.0
+  tau_max: 1.0
+
+  ckpt_every: 10
+
+model:
+  type: "dit_plain"           # plain score parameterization (no structural prior)
+  in_channels: 2
+
+  dit:                        # DiT block matches small.yaml for capacity-controlled comparison
+    Nx: 128
+    dim: 256
+    n_layers: 6
+    n_heads: 8
+    patch_size: 4
+    dropout: 0.1
+
+loss:
+  lambda_dsm: 1.0
+  lambda_bv: 0.0              # plain variant: no BV regularizer
+  lambda_time: 0.0            # plain variant: no time-consistency loss
+
+data:
+  conditioning_type: "ic"
+  mix_strategy: "uniform"
+  pdes:
+    - name: "burgers"
+      data_file: "burgers_1d_N5000_Nx128.npy"
+      flux_type: "burgers"
+      weight: 1.0
+    - name: "buckley_leverett"
+      data_file: "bl_1d_N5000_Nx128.npy"
+      flux_type: "buckley_leverett"
+      weight: 1.0

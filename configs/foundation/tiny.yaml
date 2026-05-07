@@ -1,0 +1,53 @@
+# =============================================================================
+# Foundation Model · TINY configuration (~8 GB GPU, e.g. RTX 4060 / Colab T4).
+# =============================================================================
+
+experiment:
+  name: "foundation_tiny"
+  epochs: 50
+  learning_rate: 2.0e-4
+  batch_size: 16              # fits in ~8 GB
+  grad_accum_steps: 4         # effective batch = 64
+  use_amp: false              # AMP disabled for compatibility with second-order autograd
+
+  # Schedule
+  nu: 1.0
+  tau_max: 1.0
+
+  # Checkpoint interval (epochs)
+  ckpt_every: 5
+
+# ----- Model -----
+model:
+  type: "dit_bvaware"         # "dit_plain" | "dit_bvaware"
+  in_channels: 2              # noisy_u + IC; controlled by data.conditioning_type='ic'
+
+  # DiT architecture parameters
+  dit:
+    Nx: 128
+    dim: 128
+    n_layers: 4
+    n_heads: 4
+    patch_size: 4
+    dropout: 0.1
+  # n_pde_types is injected at runtime from len(data.pdes).
+
+# ----- Loss -----
+loss:
+  lambda_dsm: 1.0
+  lambda_bv: 0.1
+  lambda_time: 0.0            # tiny: time loss disabled by default; enable for small/base
+
+# ----- Data (mixed-PDE dataset configuration) -----
+data:
+  conditioning_type: "ic"
+  mix_strategy: "uniform"
+  pdes:
+    - name: "burgers"
+      data_file: "burgers_1d_N5000_Nx128.npy"
+      flux_type: "burgers"
+      weight: 1.0
+    - name: "buckley_leverett"
+      data_file: "bl_1d_N5000_Nx128.npy"
+      flux_type: "buckley_leverett"
+      weight: 1.0
